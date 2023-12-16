@@ -30,10 +30,11 @@ class HomeViewController: UIViewController , UITableViewDataSource, UITableViewD
                        let name = data["name"] as? String,
                         let creator = data["creator"] as? String,
                        let ingredients = data["ingredients"] as? [String],
+                       let equipment = data["equipment"] as? [String],
                         let steps = data["Steps"]as? [String]{
                         
                         let documentID = document.documentID
-                        let recipe = recipeModel(documentID: documentID,imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, steps: steps)
+                        let recipe = recipeModel(documentID: documentID,imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment,steps: steps)
                         
                         // Menambahkan recipe ke array 2 dimensi
                         fetchedRecipes.append([recipe])

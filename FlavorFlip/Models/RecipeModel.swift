@@ -16,5 +16,6 @@ struct recipeModel {
     var time: String?
     var description: String?
     var ingredients: [String]?
+    var equipment: [String]?
     var steps: [String]?
 }
