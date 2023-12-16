@@ -9,24 +9,32 @@ import UIKit
 import FirebaseFirestore
 
 class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-
-    @IBOutlet weak var savedList: UICollectionView!
-    @IBOutlet var flowLayout: UICollectionViewFlowLayout!
-    
     
     var selectedRecipe: recipeModel?
     var savedRecipes: [recipeModel] = []
+
+    @IBOutlet weak var savedList: UICollectionView!
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         savedList.dataSource = self
         savedList.delegate = self
-        
+    
         if let selectedRecipe = selectedRecipe {
                    savedRecipes.append(selectedRecipe)
                    savedList.reloadData()
                }
-        fetchedSavedRecipes(for: "currentUserDocumentID")
+        fetchedSavedRecipes(for: "currentUserDocumentID" )
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        flowLayout.scrollDirection = .vertical
+        flowLayout.minimumLineSpacing = 2
+        flowLayout.minimumInteritemSpacing = 2
+        flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
     
     override func viewDidLayoutSubviews() {
@@ -66,8 +74,32 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
         }
         cell.TitleLabel.text = recipe.name
         
+        if let imageURLString = recipe.imagePotrait, let imageURL = URL(string: imageURLString) {
+            URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
+            if let error = error {
+                print("Error mengunduh gambar: \(error.localizedDescription)")
+                return
+            }
+
+            guard let data = data, let image = UIImage(data: data) else {
+                    print("Gagal membuat gambar dari data")
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    cell.imageRecipes.image = image
+                }
+
+            }.resume()
+        } else {
+            print("URL gambar tidak valid")
+        }
+        
+        cell.TitleLabel.text = recipe.name
+        
         return cell
     }
+    
     
     func fetchedSavedRecipes(for userID: String){
         let userRef = Firestore.firestore().collection("users").document(userID)
@@ -111,6 +143,9 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
                 }else{
                     print("Recipe document does not exist or there was an error: \(error?.localizedDescription ?? "Unknown error")")
                 }
+                
+                self.savedRecipes = newRecipes
+                self.savedList.reloadData()
             }
         }
         
@@ -119,4 +154,6 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
             self.savedList.reloadData()
         }
     }
+    
+    
 }

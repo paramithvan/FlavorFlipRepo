@@ -21,7 +21,8 @@ class DetailRecipeViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var timeDetail: UILabel!
     @IBOutlet weak var levelDetail: UILabel!
     @IBOutlet weak var portionDetail: UILabel!
-    @IBOutlet weak var recipeDescription: UITextView!
+    
+    @IBOutlet var recipeDescription: UILabel!
     @IBOutlet weak var stepsList: UITableView!
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -61,7 +62,6 @@ class DetailRecipeViewController: UIViewController, UITableViewDelegate, UITable
             recipeDescription.text = recipe.description
             timeDetail.text = recipe.time
             levelDetail.text = recipe.level
-            recipeDescription.isEditable = false
             
             
             if let imageURLString = recipe.imagePotrait, let imageURL = URL(string: imageURLString) {
@@ -87,10 +87,6 @@ class DetailRecipeViewController: UIViewController, UITableViewDelegate, UITable
             
             
         }
-        
-        recipeDescription.isScrollEnabled = false
-        recipeDescription.textContainer.lineBreakMode = .byWordWrapping
-        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -100,7 +96,6 @@ class DetailRecipeViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "stepCell") as! StepsTableViewCell
-        //        cell.step_tableviewcell_detail.text = recipe?.steps?[indexPath.row]
         
         // Periksa apakah recipe dan steps tidak nil, dan indexPath.row adalah indeks yang valid
         if let steps = recipe?.steps, indexPath.row < steps.count {
