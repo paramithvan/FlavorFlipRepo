@@ -77,6 +77,7 @@
 		677F342B2B23461D00300C72 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				676DFA7D2B270D21004CB4B7 /* IngredientsViewController.swift */,
 				67E1CBB22AE7B84200D11E9D /* ViewController.swift */,
 				676454822B1F7BEA00CF63B3 /* RegisterViewController.swift */,
 				67003B3E2B2063CA0001F996 /* HomeViewController.swift */,
@@ -94,6 +95,14 @@
 				67BD82FD2B24EE8A00AD0A45 /* StepsTableViewCell.swift */,
 			);
 			path = TableViewCells;
+			sourceTree = "<group>";
+		};
+		67D2173E2B2A142D00F5CE75 /* CollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				671B79BF2B25AFCE00DD9058 /* SavedRecipeCollectionViewCell.swift */,
+			);
+			path = CollectionViewCell;
 			sourceTree = "<group>";
 		};
 		67E1CBA22AE7B84200D11E9D = {
@@ -115,6 +124,7 @@
 		67E1CBAD2AE7B84200D11E9D /* FlavorFlip */ = {
 			isa = PBXGroup;
 			children = (
+				67D2173E2B2A142D00F5CE75 /* CollectionViewCell */,
 				67BD82FA2B24EE0F00AD0A45 /* TableViewCells */,
 				677F342B2B23461D00300C72 /* ViewControllers */,
 				677F342A2B2345F700300C72 /* Models */,
@@ -125,8 +135,6 @@
 				67E1CBB92AE7B84300D11E9D /* LaunchScreen.storyboard */,
 				27499CF22B237BE70040C00A /* GoogleService-Info.plist */,
 				67E1CBBC2AE7B84300D11E9D /* Info.plist */,
-				671B79BF2B25AFCE00DD9058 /* SavedRecipeCollectionViewCell.swift */,
-				676DFA7D2B270D21004CB4B7 /* IngredientsViewController.swift */,
 			);
 			path = FlavorFlip;
 			sourceTree = "<group>";
