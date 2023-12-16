@@ -105,7 +105,4 @@ class RegisterViewController: UIViewController {
         
         return isAlp && isNum
     }
-    
-    
-
 }

@@ -9,20 +9,32 @@ import UIKit
 import FirebaseFirestore
 
 class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-
-    @IBOutlet weak var savedList: UICollectionView!
+    
     var selectedRecipe: recipeModel?
     var savedRecipes: [recipeModel] = []
+
+    @IBOutlet weak var savedList: UICollectionView!
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         savedList.dataSource = self
         savedList.delegate = self
-        
+    
         if let selectedRecipe = selectedRecipe {
                    savedRecipes.append(selectedRecipe)
                    savedList.reloadData()
                }
+        fetchedSavedRecipes(for: "currentUserDocumentID" )
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        flowLayout.scrollDirection = .vertical
+        flowLayout.minimumLineSpacing = 2
+        flowLayout.minimumInteritemSpacing = 2
+        flowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -34,12 +46,32 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
         
         let recipe = savedRecipes[indexPath.item]
         
+        if let imageURLString = recipe.imagePotrait, let imageURL = URL(string: imageURLString) {
+            URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
+            if let error = error {
+                print("Error mengunduh gambar: \(error.localizedDescription)")
+                return
+            }
+
+            guard let data = data, let image = UIImage(data: data) else {
+                    print("Gagal membuat gambar dari data")
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    cell.imageRecipes.image = image
+                }
+
+            }.resume()
+        } else {
+            print("URL gambar tidak valid")
+        }
+        
+        cell.TitleLabel.text = recipe.name
+        
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = savedList.dequeueReusableCell(withReuseIdentifier: "savedCell", for: indexPath) as! SavedRecipeCollectionViewCell
-    }
     
     func fetchedSavedRecipes(for userID: String){
         let userRef = Firestore.firestore().collection("users").document(userID)
@@ -55,6 +87,8 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
     }
     
     func fetchRecipeDetails(for recipeDocumentIDs: [String]){
+        var newRecipes: [recipeModel] = []
+        
         for documentID in recipeDocumentIDs{
             let recipeRef = Firestore.firestore().collection("recipes").document(documentID)
             
@@ -64,16 +98,23 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
                        let name = document.data()?["name"] as? String,
                        let creator = document.data()?["creator"] as? String,
                        let ingredients = document.data()?["ingredients"] as? [String],
+                       let equipment = document.data()?["equipment"] as? [String],
                        let steps = document.data()?["Steps"]as? [String]{
-                        let recipe = recipeModel(documentID: documentID, imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, steps: steps)
-                        // masukin recipe yang di fecth ke yang di save
-                        self.savedRecipes.append(recipe)
-                        self.savedList.reloadData()
+                        let recipe = recipeModel(documentID: documentID, imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment, steps: steps)
+//                        // masukin recipe yang di fecth ke yang di save
+//                        self.savedRecipes.append(recipe)
+//                        self.savedList.reloadData()
+                        newRecipes.append(recipe)
                     }
                 }else{
                     print("Recipe document does not exist or there was an error: \(error?.localizedDescription ?? "Unknown error")")
                 }
+                
+                self.savedRecipes = newRecipes
+                self.savedList.reloadData()
             }
         }
     }
+    
+    
 }
