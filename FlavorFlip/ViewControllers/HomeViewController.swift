@@ -100,6 +100,9 @@ class HomeViewController: UIViewController , UITableViewDataSource, UITableViewD
         TableViewRecipe.dataSource = self
         TableViewRecipe.delegate = self
         fetchDataFromFirestore()
+        
+        // buat ilangin putih putih di atasnya
+//        TableViewRecipe.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: TableViewRecipe.frame.height, height: CGFloat.leastNormalMagnitude))
     }
     
     // Implementasi fungsi dari RecipeTableViewCellDelegate

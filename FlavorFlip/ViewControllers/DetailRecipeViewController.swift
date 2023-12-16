@@ -96,7 +96,6 @@ class DetailRecipeViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "stepCell") as! StepsTableViewCell
-        //        cell.step_tableviewcell_detail.text = recipe?.steps?[indexPath.row]
         
         // Periksa apakah recipe dan steps tidak nil, dan indexPath.row adalah indeks yang valid
         if let steps = recipe?.steps, indexPath.row < steps.count {
