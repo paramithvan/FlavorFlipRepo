@@ -37,14 +37,86 @@ class DetailRecipeViewController: UIViewController, UITableViewDelegate, UITable
         performSegue(withIdentifier: "goToIngredients", sender: recipe)
     }
     
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: "Saved", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func showAlertWithDeleteOption(message: String, recipeID: String) {
+        let alert = UIAlertController(title: "Saved", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [weak self] _ in
+            // Handle delete option
+            self?.deleteSavedRecipe(recipeID: recipeID)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func deleteSavedRecipe(recipeID: String) {
+        guard let currentUserDocumentID = UserDefaults.standard.string(forKey: "currentUserDocumentID") else {
+            return
+        }
+
+        Firestore.firestore().collection("users/\(currentUserDocumentID)/savedRecipes")
+                .whereField("recipeID", isEqualTo: recipeID)
+                .getDocuments { [weak self] (snapshot, error) in
+                    if let error = error {
+                        print("Error getting saved recipe document: \(error)")
+                    } else if let document = snapshot?.documents.first {
+                        let documentID = document.documentID
+                        Firestore.firestore().collection("users/\(currentUserDocumentID)/savedRecipes").document(documentID).delete { error in
+                            if let error = error {
+                                print("Error deleting saved recipe document: \(error)")
+                            } else {
+                                self?.showAlert(message: "Recipe deleted successfully!")
+                            }
+                        }
+                    }
+        }
+    }
+    
+    func validateSavedRecipe(recipeID: String, userID: String, completion: @escaping (Bool) -> Void) {
+        let savedRef = Firestore.firestore().collection("users/\(userID)/savedRecipes").whereField("recipeID", isEqualTo: recipeID)
+
+        savedRef.getDocuments { (snapshot, error) in
+            if let error = error {
+                print("Error getting saved recipe document: \(error)")
+                completion(false)
+            } else if snapshot?.isEmpty == false {
+                // Recipe is already saved
+                completion(true)
+            } else {
+                // Recipe is not saved
+                completion(false)
+            }
+        }
+    }
+    
     @IBAction func SavedRecipe(_ sender: Any) {
         if let currentUserDocumentID = UserDefaults.standard.string(forKey: "currentUserDocumentID"), let recipeID = recipe?.documentID{
-            saveRecipeForCurrentUser(recipeID: recipeID, userID: currentUserDocumentID)
+//            saveRecipeForCurrentUser(recipeID: recipeID, userID: currentUserDocumentID)
             
-            if let bookmarkVC = storyboard?.instantiateViewController(withIdentifier: "BookmarkViewController") as? BookmarkViewController {
-                        bookmarkVC.selectedRecipe = recipe
-                        navigationController?.pushViewController(bookmarkVC, animated: true)
-            }
+            validateSavedRecipe(recipeID: recipe!.documentID, userID: currentUserDocumentID) { [weak self] isSaved in
+                    if isSaved {
+                        self?.showAlertWithDeleteOption(message: "Recipe is already saved. Do you want to delete it?", recipeID: self?.recipe?.documentID ?? "")
+                    } else {
+                        self?.saveRecipeForCurrentUser(recipeID: self?.recipe?.documentID ?? "", userID: currentUserDocumentID)
+                        self?.showAlert(message: "Recipe saved successfully!")
+                        if let bookmarkVC = self?.storyboard?.instantiateViewController(withIdentifier: "BookmarkViewController") as? BookmarkViewController {
+                            print("masuk validasi bookmark")
+                            bookmarkVC.selectedRecipe = self?.recipe
+            //                        navigationController?.pushViewController(bookmarkVC, animated: true)
+                        }
+                    }
+                }
+            
+//            print("masuk sini ga sih")
+//            if let bookmarkVC = storyboard?.instantiateViewController(withIdentifier: "BookmarkViewController") as? BookmarkViewController {
+//                print("masuk validasi bookmark")
+//                        bookmarkVC.selectedRecipe = recipe
+////                        navigationController?.pushViewController(bookmarkVC, animated: true)
+//            }
         }
     }
     

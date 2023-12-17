@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="mY0-OC-JlX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
@@ -580,7 +580,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="yehahaha@gmail.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FAA-jK-Sxf">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="yehahaha@gmail.com" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FAA-jK-Sxf">
                                 <rect key="frame" x="188" y="179" width="124" height="15"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="textColor"/>
@@ -591,6 +591,9 @@
                                 <color key="tintColor" red="0.74901962280000001" green="0.2941176593" blue="0.2352941036" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="rectangle.portrait.and.arrow.right.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="logout:" destination="oPd-XQ-Jut" eventType="touchUpInside" id="Tu7-IN-zRe"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="FJ6-cr-H1a"/>
@@ -624,7 +627,9 @@
                     <navigationItem key="navigationItem" id="JIw-Ln-Kyy"/>
                     <connections>
                         <outlet property="flowLayout" destination="Gjs-Bk-P5X" id="wXa-oi-vT7"/>
+                        <outlet property="greetings" destination="Gc4-Pg-6Im" id="ZXh-xO-OzG"/>
                         <outlet property="savedList" destination="Emd-Lw-1H3" id="gtg-ae-JVc"/>
+                        <outlet property="userEmail" destination="FAA-jK-Sxf" id="1gH-16-oFd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WB4-Kl-XVX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -891,8 +896,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="3ZJ-DU-heu" kind="relationship" relationship="viewControllers" id="eDW-S8-Nqs"/>
                         <segue destination="QXa-xB-KuA" kind="relationship" relationship="viewControllers" id="bv8-Ys-FI0"/>
+                        <segue destination="3ZJ-DU-heu" kind="relationship" relationship="viewControllers" id="Xs4-LJ-Kse"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mU4-KP-65K" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -903,7 +908,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="MZM-De-sIb"/>
         <segue reference="L5y-Jo-B2M"/>
-        <segue reference="OdU-va-XiZ"/>
+        <segue reference="kBp-Lc-ipQ"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.88235294819999999" green="0.41176474089999998" blue="0.32941177490000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
