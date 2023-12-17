@@ -157,6 +157,28 @@ class DetailRecipeViewController: UIViewController, UITableViewDelegate, UITable
                 print("URL gambar tidak valid")
             }
             
+            if let imageURLString = recipe.creatorPhotos, let imageURL = URL(string: imageURLString) {
+                URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
+                if let error = error {
+                    print("Error mengunduh gambar: \(error.localizedDescription)")
+                    return
+                }
+
+                guard let data = data, let image = UIImage(data: data) else {
+                        print("Gagal membuat gambar dari data")
+                        return
+                    }
+
+                    DispatchQueue.main.async { [self] in
+                        chefImage.image = image
+                        chefImage.layer.cornerRadius = 30
+                    }
+
+                }.resume()
+            } else {
+                print("URL gambar tidak valid")
+            }
+            
             
         }
     }
