@@ -556,7 +556,6 @@
                                         <connections>
                                             <outlet property="TitleLabel" destination="z7y-nh-g5E" id="Pdj-eA-qyz"/>
                                             <outlet property="imageRecipes" destination="baQ-59-8e4" id="Gfj-GI-3pe"/>
-                                            <segue destination="zOC-RE-0Mv" kind="show" identifier="LookDetail" id="kBp-Lc-ipQ"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -630,6 +629,7 @@
                         <outlet property="greetings" destination="Gc4-Pg-6Im" id="ZXh-xO-OzG"/>
                         <outlet property="savedList" destination="Emd-Lw-1H3" id="gtg-ae-JVc"/>
                         <outlet property="userEmail" destination="FAA-jK-Sxf" id="1gH-16-oFd"/>
+                        <segue destination="zOC-RE-0Mv" kind="show" identifier="LookDetail" id="ery-Do-gYT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WB4-Kl-XVX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -908,7 +908,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="MZM-De-sIb"/>
         <segue reference="L5y-Jo-B2M"/>
-        <segue reference="kBp-Lc-ipQ"/>
+        <segue reference="ery-Do-gYT"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.88235294819999999" green="0.41176474089999998" blue="0.32941177490000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>

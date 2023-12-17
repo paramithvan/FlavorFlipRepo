@@ -81,6 +81,18 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
         return savedRecipes.count
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedRecipe = savedRecipes[indexPath.item]
+        performSegue(withIdentifier: "LookDetail", sender: selectedRecipe)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "LookDetail", let destinationVC = segue.destination as? DetailRecipeViewController, let selectedRecipe = sender as? recipeModel {
+            destinationVC.recipe = selectedRecipe
+        }
+    }
+    
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = savedList.dequeueReusableCell(withReuseIdentifier: "savedCell", for: indexPath) as! SavedRecipeCollectionViewCell
         
@@ -149,9 +161,10 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
                        let creator = recipeDocument["creator"] as? String,
                        let ingredients = recipeDocument["ingredients"] as? [String],
                        let equipment = recipeDocument["equipment"] as? [String],
-                       let steps = recipeDocument["Steps"] as? [String] {
+                       let steps = recipeDocument["Steps"] as? [String],
+                       let creatorPhotos = recipeDocument["creatorPhotos"] as? String{
 
-                        let recipe = recipeModel(documentID: recipeID, imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment, steps: steps)
+                        let recipe = recipeModel(documentID: recipeID, imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment, steps: steps, creatorPhotos: creatorPhotos)
                         newRecipes.append(recipe)
                     }
                 } else {

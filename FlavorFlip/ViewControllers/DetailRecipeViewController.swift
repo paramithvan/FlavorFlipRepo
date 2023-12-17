@@ -12,6 +12,7 @@ class DetailRecipeViewController: UIViewController, UITableViewDelegate, UITable
     
     var recipe: recipeModel?
     var selectedRecipeIndex: IndexPath?
+    weak var bookmarkVC: BookmarkViewController?
     
     @IBOutlet weak var recipeImage: UIImageView!
     @IBOutlet weak var chefImage: UIImageView!
@@ -72,6 +73,9 @@ class DetailRecipeViewController: UIViewController, UITableViewDelegate, UITable
                                 self?.showAlert(message: "Recipe deleted successfully!")
                             }
                         }
+//                        self?.bookmarkVC?.selectedRecipe = nil
+                        self?.bookmarkVC?.fetchedSavedRecipes()
+                        self?.bookmarkVC?.savedList.reloadData()
                     }
         }
     }
