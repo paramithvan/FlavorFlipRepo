@@ -10,6 +10,7 @@ import Foundation
 struct recipeModel {
     var documentID: String
     var imagePotrait: String?
+    var chefPhoto: String?
     var name: String?
     var creator: String?
     var level: String?
