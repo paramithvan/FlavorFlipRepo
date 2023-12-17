@@ -49,6 +49,12 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchedSavedRecipes()
+        self.savedList.reloadData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         savedList.dataSource = self
