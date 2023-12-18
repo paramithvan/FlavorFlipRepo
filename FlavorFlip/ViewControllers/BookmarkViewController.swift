@@ -8,14 +8,14 @@
 import UIKit
 import FirebaseFirestore
 
-class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     var selectedRecipe: recipeModel?
-//    var savedRecipes: [recipeModel] = []
     var savedRecipes = [recipeModel]()
     var usernameVar: String?
     var emailVar: String?
-
+    var cornerRadius: CGFloat = 12.0
+   
     @IBOutlet weak var userEmail: UILabel!
     @IBOutlet weak var greetings: UILabel!
     @IBOutlet weak var savedList: UICollectionView!
@@ -36,11 +36,11 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
                     print(currentUserDocumentID)
                     if id == currentUserDocumentID{
                         print("yeha")
-                        let ema = data["email"] as? String
-                        print(ema)
+                        let email = data["email"] as? String
+                        print(email)
                         let use = data["username"] as? String
                         print(use)
-                        self?.userEmail.text = ema
+                        self?.userEmail.text = email
                         self?.greetings.text = "Hello, \(use!)"
                     }
 
@@ -54,6 +54,7 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
         fetchedSavedRecipes()
         self.savedList.reloadData()
     }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -92,6 +93,8 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
         performSegue(withIdentifier: "LookDetail", sender: selectedRecipe)
     }
     
+
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "LookDetail", let destinationVC = segue.destination as? DetailRecipeViewController, let selectedRecipe = sender as? recipeModel {
             destinationVC.recipe = selectedRecipe
@@ -129,6 +132,20 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let customHeight:CGFloat = 235
+        let flowayout = collectionViewLayout as? UICollectionViewFlowLayout
+        let space: CGFloat = (flowayout?.minimumInteritemSpacing ?? 0.0) + (flowayout?.sectionInset.left ?? 0.0) + (flowayout?.sectionInset.right ?? 0.0)
+        let size:CGFloat = (savedList.frame.size.width - space) / 2.0
+        
+        return CGSize(width: size, height: customHeight)
+    }
+    
     
     
     func fetchedSavedRecipes() {
