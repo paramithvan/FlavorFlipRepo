@@ -12,7 +12,6 @@
 		27F967082B21EF83001D412B /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 27F967072B21EF83001D412B /* FirebaseFirestoreSwift */; };
 		27F9670C2B21FB05001D412B /* DetailRecipeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9670B2B21FB05001D412B /* DetailRecipeViewController.swift */; };
 		27F967102B220F6B001D412B /* RecipeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9670F2B220F6B001D412B /* RecipeModel.swift */; };
-		67003B3F2B2063CA0001F996 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67003B3E2B2063CA0001F996 /* HomeViewController.swift */; };
 		671B79C02B25AFCE00DD9058 /* SavedRecipeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671B79BF2B25AFCE00DD9058 /* SavedRecipeCollectionViewCell.swift */; };
 		676454812B1F791600CF63B3 /* RecipeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676454802B1F791600CF63B3 /* RecipeTableViewCell.swift */; };
 		676454832B1F7BEA00CF63B3 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676454822B1F7BEA00CF63B3 /* RegisterViewController.swift */; };
@@ -35,7 +34,6 @@
 		27499CF22B237BE70040C00A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Models/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		27F9670B2B21FB05001D412B /* DetailRecipeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRecipeViewController.swift; sourceTree = "<group>"; };
 		27F9670F2B220F6B001D412B /* RecipeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeModel.swift; sourceTree = "<group>"; };
-		67003B3E2B2063CA0001F996 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		671B79BF2B25AFCE00DD9058 /* SavedRecipeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedRecipeCollectionViewCell.swift; sourceTree = "<group>"; };
 		676454802B1F791600CF63B3 /* RecipeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTableViewCell.swift; sourceTree = "<group>"; };
 		676454822B1F7BEA00CF63B3 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
@@ -84,7 +82,6 @@
 				676DFA7D2B270D21004CB4B7 /* IngredientsViewController.swift */,
 				67E1CBB22AE7B84200D11E9D /* ViewController.swift */,
 				676454822B1F7BEA00CF63B3 /* RegisterViewController.swift */,
-				67003B3E2B2063CA0001F996 /* HomeViewController.swift */,
 				27F9670B2B21FB05001D412B /* DetailRecipeViewController.swift */,
 				67E0F5982B25CADC0071B0DD /* BookmarkViewController.swift */,
 				67D3AFD82B3073D40042521A /* HomeeViewController.swift */,
@@ -238,7 +235,6 @@
 				676DFA7E2B270D21004CB4B7 /* IngredientsViewController.swift in Sources */,
 				677F342D2B23466F00300C72 /* UserModel.swift in Sources */,
 				67D3AFD92B3073D40042521A /* HomeeViewController.swift in Sources */,
-				67003B3F2B2063CA0001F996 /* HomeViewController.swift in Sources */,
 				67D3AFDC2B3076620042521A /* RecipeListTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

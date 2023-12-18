@@ -294,7 +294,7 @@
                                 <rect key="frame" x="16" y="142" width="361" height="680"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <color key="sectionIndexBackgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="sectionIndexBackgroundColor" red="0.96862745289999996" green="0.95686274770000002" blue="0.90980386729999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ingredientsCell" rowHeight="83" id="QUd-tb-kdd" customClass="IngredientsTableViewCell" customModule="FlavorFlip" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="361" height="83"/>
@@ -325,6 +325,7 @@
                                                 <constraint firstItem="bnl-p3-H7U" firstAttribute="top" secondItem="VIH-lb-f36" secondAttribute="top" constant="11" id="qDt-rK-6Qd"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.96862745289999996" green="0.95686274770000002" blue="0.90980386729999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <connections>
                                             <outlet property="ingredientImage" destination="bnl-p3-H7U" id="hlU-zN-4dx"/>
                                             <outlet property="ingredientName" destination="N1B-xT-IZO" id="3gk-Ax-J2w"/>
@@ -362,7 +363,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fhw-Lz-uEA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4933.5877862595416" y="-315.49295774647891"/>
+            <point key="canvasLocation" x="4934" y="-268"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="jff-KX-Rjy">
@@ -543,7 +544,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xrn-Yr-36U" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1511" y="769"/>
+            <point key="canvasLocation" x="2573" y="-268"/>
         </scene>
         <!--Homee View Controller-->
         <scene sceneID="Gaj-C6-ACB">
@@ -593,6 +594,7 @@
                                                     <buttonConfiguration key="configuration" style="filled" image="arrowshape.forward.fill" catalog="system" cornerStyle="capsule"/>
                                                     <connections>
                                                         <action selector="DetailButton:" destination="MsW-UL-Tij" eventType="touchUpInside" id="E8n-Rr-JPA"/>
+                                                        <segue destination="zOC-RE-0Mv" kind="show" identifier="goToDetail" id="fx1-4j-N5u"/>
                                                     </connections>
                                                 </button>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="cTf-fJ-WHD">
@@ -650,7 +652,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yZI-CR-Ymn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2571.7557251908397" y="1171.8309859154931"/>
+            <point key="canvasLocation" x="3346" y="-268"/>
         </scene>
         <!--Detail Recipe View Controller-->
         <scene sceneID="K86-fR-2mI">
@@ -883,7 +885,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nQd-gI-qne" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4162.5954198473282" y="-315.49295774647891"/>
+            <point key="canvasLocation" x="4152" y="-268"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="9AF-CG-8gm">
@@ -909,6 +911,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="MZM-De-sIb"/>
         <segue reference="L5y-Jo-B2M"/>
+        <segue reference="fx1-4j-N5u"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.88235294819999999" green="0.41176474089999998" blue="0.32941177490000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
     <resources>
