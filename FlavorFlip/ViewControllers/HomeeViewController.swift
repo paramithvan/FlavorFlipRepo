@@ -1,21 +1,92 @@
 //
-//  HomeViewController.swift
+//  HomeeViewController.swift
 //  FlavorFlip
 //
-//  Created by Vania Paramitha on 06/12/23.
+//  Created by Vania Paramitha on 18/12/23.
 //
 
 import UIKit
 import FirebaseFirestore
 
-class HomeViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, RecipeTableViewCellDelegate{
-
+class HomeeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, RecipesTableViewDelegate {
+    
     let database = Firestore.firestore()
-
-    @IBOutlet weak var TableViewRecipe: UITableView!
+    
     var arrOfRecipe = [[recipeModel]]() // Mengubah tipe data ke array dua dimensi
     var selectedRecipeIndex: IndexPath?
+    
+    @IBOutlet weak var listRecipeTV: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        listRecipeTV.dataSource = self
+        listRecipeTV.delegate = self
+        fetchDataFromFirestore()
 
+        // Do any additional setup after loading the view.
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return arrOfRecipe[section].count
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        // Mengembalikan jumlah section sesuai dengan jumlah elemen di arrOfRecipe
+        return arrOfRecipe.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! RecipeListTableViewCell
+        
+        cell.delegate = self // Mengatur delegate pada setiap sel untuk menangani pengklikan tombol
+        cell.indexPath = indexPath // setel indexPath pada cell
+
+        // Mengatur recipe pada setiap sel agar dapat diakses saat tombol diklik
+        cell.recipe = arrOfRecipe[indexPath.section][indexPath.row]
+        
+        // Mengambil recipe dari array dua dimensi
+        let recipe = arrOfRecipe[indexPath.section][indexPath.row]
+        
+        if let imageURLString = recipe.imagePotrait, let imageURL = URL(string: imageURLString) {
+            URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
+            if let error = error {
+                print("Error mengunduh gambar: \(error.localizedDescription)")
+                return
+            }
+
+            guard let data = data, let image = UIImage(data: data) else {
+                    print("Gagal membuat gambar dari data")
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    cell.recipeImages.image = image
+                }
+
+            }.resume()
+        } else {
+            print("URL gambar tidak valid")
+        }
+        
+        cell.recipeTitle.text = recipe.name
+        cell.chefName.text = recipe.creator
+        
+        return cell
+    }
+    
+    // Implementasi fungsi dari RecipeTableViewCellDelegate
+    func didTapGoToDetail(recipe: recipeModel, indexpath: IndexPath) {
+        // Menangani pengklikan tombol dan pindah ke DetailRecipeViewController
+        selectedRecipeIndex = indexpath
+        performSegue(withIdentifier: "goToDetail", sender: recipe)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if segue.identifier == "goToDetail", let destinationVC = segue.destination as? DetailRecipeViewController, let recipe = sender as? recipeModel {
+                destinationVC.recipe = recipe
+                destinationVC.selectedRecipeIndex = selectedRecipeIndex
+            }
+        }
     
     func fetchDataFromFirestore() {
         database.collection("recipes").getDocuments { [weak self] (snapshot, error) in
@@ -42,81 +113,12 @@ class HomeViewController: UIViewController , UITableViewDataSource, UITableViewD
                     }
                 }
                 self?.arrOfRecipe = fetchedRecipes
-                self?.TableViewRecipe.reloadData()
+                self?.listRecipeTV.reloadData()
             }
         }
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Menggunakan array dalam array, sehingga setiap section hanya memiliki satu item
-        return arrOfRecipe[section].count
-    }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        // Mengembalikan jumlah section sesuai dengan jumlah elemen di arrOfRecipe
-        return arrOfRecipe.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! RecipeTableViewCell
-        
-        cell.delegate = self // Mengatur delegate pada setiap sel untuk menangani pengklikan tombol
-        cell.indexPath = indexPath // setel indexPath pada cell
 
-        // Mengatur recipe pada setiap sel agar dapat diakses saat tombol diklik
-        cell.recipe = arrOfRecipe[indexPath.section][indexPath.row]
-        
-        // Mengambil recipe dari array dua dimensi
-        let recipe = arrOfRecipe[indexPath.section][indexPath.row]
-        
-        if let imageURLString = recipe.imagePotrait, let imageURL = URL(string: imageURLString) {
-            URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
-            if let error = error {
-                print("Error mengunduh gambar: \(error.localizedDescription)")
-                return
-            }
-
-            guard let data = data, let image = UIImage(data: data) else {
-                    print("Gagal membuat gambar dari data")
-                    return
-                }
-
-                DispatchQueue.main.async {
-                    cell.RecipePhotos.image = image
-                }
-
-            }.resume()
-        } else {
-            print("URL gambar tidak valid")
-        }
-        
-        cell.RecipeTItleLabel.text = recipe.name
-        cell.ChefLabel.text = recipe.creator
-        
-        return cell
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        TableViewRecipe.dataSource = self
-        TableViewRecipe.delegate = self
-        fetchDataFromFirestore()
-        
-        // buat ilangin putih putih di atasnya
-//        TableViewRecipe.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: TableViewRecipe.frame.height, height: CGFloat.leastNormalMagnitude))
-    }
-    
-    // Implementasi fungsi dari RecipeTableViewCellDelegate
-    func didTapGoToDetail(recipe: recipeModel, indexpath: IndexPath) {
-        // Menangani pengklikan tombol dan pindah ke DetailRecipeViewController
-        selectedRecipeIndex = indexpath
-        performSegue(withIdentifier: "goToDetail", sender: recipe)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-            if segue.identifier == "goToDetail", let destinationVC = segue.destination as? DetailRecipeViewController, let recipe = sender as? recipeModel {
-                destinationVC.recipe = recipe
-                destinationVC.selectedRecipeIndex = selectedRecipeIndex
-            }
-        }
+   
 }
