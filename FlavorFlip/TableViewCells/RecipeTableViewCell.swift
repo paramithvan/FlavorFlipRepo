@@ -23,10 +23,10 @@ class RecipeTableViewCell: UITableViewCell {
     
     var recipe: recipeModel?
     
-    // Menambahkan delegate untuk memberi tahu HomeViewController saat tombol diklik
+//     Menambahkan delegate untuk memberi tahu HomeViewController saat tombol diklik
     weak var delegate: RecipeTableViewCellDelegate?
     var indexPath: IndexPath?
-    
+
  
     @IBAction func GoToDetail(_ sender: Any) {
         // Memastikan delegate tidak nil dan mengirim data resep dan indexParh
