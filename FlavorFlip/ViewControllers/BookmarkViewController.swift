@@ -11,22 +11,68 @@ import FirebaseFirestore
 class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var selectedRecipe: recipeModel?
-    var savedRecipes: [recipeModel] = []
+//    var savedRecipes: [recipeModel] = []
+    var savedRecipes = [recipeModel]()
+    var usernameVar: String?
+    var emailVar: String?
 
+    @IBOutlet weak var userEmail: UILabel!
+    @IBOutlet weak var greetings: UILabel!
     @IBOutlet weak var savedList: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
+    
+    func fetchDataUser(){
+        let currentUserDocumentID = UserDefaults.standard.string(forKey: "currentUserDocumentID")
+        Firestore.firestore().collection("users").getDocuments{
+            [weak self] (snapshot, error) in
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                var fetchedUsers: [User] = []
+                for document in snapshot!.documents{
+                    let data = document.data()
+                    let id = document.documentID as? String
+                    print(currentUserDocumentID)
+                    if id == currentUserDocumentID{
+                        print("yeha")
+                        let ema = data["email"] as? String
+                        print(ema)
+                        let use = data["username"] as? String
+                        print(use)
+                        self?.userEmail.text = ema
+                        self?.greetings.text = "Hello, \(use!)"
+                    }
+
+                }
+            }
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchedSavedRecipes()
+        self.savedList.reloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         savedList.dataSource = self
         savedList.delegate = self
-    
+        savedList.reloadData()
+        fetchDataUser()
+        userEmail.text = emailVar
+        greetings.text = "Hello, \(usernameVar)"
+        
+        
+        print(selectedRecipe)
         if let selectedRecipe = selectedRecipe {
+            print("masuk sini")
                    savedRecipes.append(selectedRecipe)
                    savedList.reloadData()
                }
-        fetchedSavedRecipes(for: "currentUserDocumentID" )
+        print("hi")
+        fetchedSavedRecipes()
     }
     
     override func viewDidLayoutSubviews() {
@@ -38,8 +84,20 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        savedRecipes.count
+        return savedRecipes.count
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedRecipe = savedRecipes[indexPath.item]
+        performSegue(withIdentifier: "LookDetail", sender: selectedRecipe)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "LookDetail", let destinationVC = segue.destination as? DetailRecipeViewController, let selectedRecipe = sender as? recipeModel {
+            destinationVC.recipe = selectedRecipe
+        }
+    }
+    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = savedList.dequeueReusableCell(withReuseIdentifier: "savedCell", for: indexPath) as! SavedRecipeCollectionViewCell
@@ -73,48 +131,121 @@ class BookmarkViewController: UIViewController, UICollectionViewDataSource, UICo
     }
     
     
-    func fetchedSavedRecipes(for userID: String){
-        let userRef = Firestore.firestore().collection("users").document(userID)
-        userRef.getDocument { document, error in
-            if let document = document, document.exists{
-                if let savedRecipeIDs = document.data()?["savedRecipes"] as? [String] {
-                    self.fetchRecipeDetails(for: savedRecipeIDs)
-                }
-            }else{
-                print("Document does not exist or there was an error: \(error?.localizedDescription ?? "Unknown error")")
+    func fetchedSavedRecipes() {
+        guard let currentUserDocumentID = UserDefaults.standard.string(forKey: "currentUserDocumentID") else {
+            return
+        }
+
+        let userRef = Firestore.firestore().collection("users").document(currentUserDocumentID)
+        userRef.collection("savedRecipes").getDocuments { [weak self] (querySnapshot, error) in
+            if let error = error {
+                print("Error getting saved recipes: \(error.localizedDescription)")
+                return
             }
+
+            var savedRecipeIDs: [String] = []
+
+            for document in querySnapshot!.documents {
+                let recipeID = document["recipeID"] as? String
+                savedRecipeIDs.append(recipeID ?? "")
+            }
+
+            self?.fetchRecipeDetails(for: savedRecipeIDs)
         }
     }
-    
-    func fetchRecipeDetails(for recipeDocumentIDs: [String]){
+
+    func fetchRecipeDetails(for recipeIDs: [String]) {
         var newRecipes: [recipeModel] = []
-        
-        for documentID in recipeDocumentIDs{
-            let recipeRef = Firestore.firestore().collection("recipes").document(documentID)
-            
-            recipeRef.getDocument{ document, error in
-                if let document = document, document.exists {
-                    if let imagePotrait = document.data()?["imagePotrait"] as? String,
-                       let name = document.data()?["name"] as? String,
-                       let creator = document.data()?["creator"] as? String,
-                       let ingredients = document.data()?["ingredients"] as? [String],
-                       let equipment = document.data()?["equipment"] as? [String],
-                       let steps = document.data()?["Steps"]as? [String]{
-                        let recipe = recipeModel(documentID: documentID, imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment, steps: steps)
-//                        // masukin recipe yang di fecth ke yang di save
-//                        self.savedRecipes.append(recipe)
-//                        self.savedList.reloadData()
+
+        for recipeID in recipeIDs {
+            let recipeRef = Firestore.firestore().collection("recipes").document(recipeID)
+
+            recipeRef.getDocument { [weak self] (recipeDocument, error) in
+                if let recipeDocument = recipeDocument, recipeDocument.exists {
+                    if let imagePotrait = recipeDocument["imagePotrait"] as? String,
+                       let name = recipeDocument["name"] as? String,
+                       let creator = recipeDocument["creator"] as? String,
+                       let ingredients = recipeDocument["ingredients"] as? [String],
+                       let equipment = recipeDocument["equipment"] as? [String],
+                       let steps = recipeDocument["Steps"] as? [String],
+                       let creatorPhotos = recipeDocument["creatorPhotos"] as? String{
+
+                        let recipe = recipeModel(documentID: recipeID, imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment, steps: steps, creatorPhotos: creatorPhotos)
                         newRecipes.append(recipe)
                     }
-                }else{
+                } else {
                     print("Recipe document does not exist or there was an error: \(error?.localizedDescription ?? "Unknown error")")
                 }
-                
-                self.savedRecipes = newRecipes
-                self.savedList.reloadData()
+
+                self?.savedRecipes = newRecipes
+                self?.savedList.reloadData()
             }
         }
     }
+
+    @IBAction func logout(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+//    func fetchRecipeDetails(for recipeDocumentIDs: [String]){
+//        var newRecipes: [recipeModel] = []
+//
+//        for documentID in recipeDocumentIDs{
+//            let recipeRef = Firestore.firestore().collection("recipes").document(documentID)
+//
+//            recipeRef.getDocument{ document, error in
+//                if let document = document, document.exists {
+//                    if let imagePotrait = document.data()?["imagePotrait"] as? String,
+//                       let name = document.data()?["name"] as? String,
+//                       let creator = document.data()?["creator"] as? String,
+//                       let ingredients = document.data()?["ingredients"] as? [String],
+//                       let equipment = document.data()?["equipment"] as? [String],
+//                       let steps = document.data()?["Steps"]as? [String]{
+//                        let recipe = recipeModel(documentID: documentID, imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment, steps: steps)
+////                        // masukin recipe yang di fecth ke yang di save
+////                        self.savedRecipes.append(recipe)
+////                        self.savedList.reloadData()
+//                        newRecipes.append(recipe)
+//                        print(recipe)
+//                    }
+//                }else{
+//                    print("Recipe document does not exist or there was an error: \(error?.localizedDescription ?? "Unknown error")")
+//                }
+//
+//                self.savedRecipes = newRecipes
+//                self.savedList.reloadData()
+//            }
+//        }
+//    }
+    
+//    func fetchRecipeDetails(recipeIDs: String) {
+//        var newRecipes: [recipeModel] = []
+//
+//        for recipeID in recipeIDs {
+////            let recipeRef2 = Firestore.firestore().collection("recipes").document(recipeID)
+////            print(recipeRef2)
+//            
+//            let recipeRef = Firestore.firestore().document(recipeID)
+//            recipeRef.getDocument { [weak self] (recipeDocument, error) in
+//                print(recipeDocument)
+//                if let recipeDocument = recipeDocument, recipeDocument.exists {
+//                    if let imagePotrait = recipeDocument.data()?["imagePotrait"] as? String,
+//                       let name = recipeDocument.data()?["name"] as? String,
+//                       let creator = recipeDocument.data()?["creator"] as? String,
+//                       let ingredients = recipeDocument.data()?["ingredients"] as? [String],
+//                       let equipment = recipeDocument.data()?["equipment"] as? [String],
+//                       let steps = recipeDocument.data()?["Steps"] as? [String] {
+//                        let recipe = recipeModel(documentID: recipeDocument.documentID, imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment, steps: steps)
+//                        newRecipes.append(recipe)
+//                        self?.savedRecipes = newRecipes
+//                        self?.savedList.reloadData()
+//                    }
+//                } else {
+//                    print("Recipe document does not exist or there was an error: \(error?.localizedDescription ?? "Unknown error")")
+//                }
+//            }
+//        }
+//    }
     
     
 }

@@ -1,53 +1,32 @@
 //
-//  HomeViewController.swift
+//  HomeeViewController.swift
 //  FlavorFlip
 //
-//  Created by Vania Paramitha on 06/12/23.
+//  Created by Vania Paramitha on 18/12/23.
 //
 
 import UIKit
 import FirebaseFirestore
 
-class HomeViewController: UIViewController , UITableViewDataSource, UITableViewDelegate, RecipeTableViewCellDelegate{
-
+class HomeeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, RecipesTableViewDelegate {
+    
     let database = Firestore.firestore()
-
-    @IBOutlet weak var TableViewRecipe: UITableView!
+    
     var arrOfRecipe = [[recipeModel]]() // Mengubah tipe data ke array dua dimensi
     var selectedRecipeIndex: IndexPath?
-
     
-    func fetchDataFromFirestore() {
-        database.collection("recipes").getDocuments { [weak self] (snapshot, error) in
-            if let error = error {
-                print("Error getting documents: \(error)")
-            } else {
-                var fetchedRecipes: [[recipeModel]] = []
-                for document in snapshot!.documents {
-                    let data = document.data()
-//                    print("Data from Firestore: \(data)")
-                    if let imagePotrait = data["imagePotrait"] as? String,
-                       let name = data["name"] as? String,
-                        let creator = data["creator"] as? String,
-                       let ingredients = data["ingredients"] as? [String],
-                       let equipment = data["equipment"] as? [String],
-                        let steps = data["Steps"]as? [String]{
-                        
-                        let documentID = document.documentID
-                        let recipe = recipeModel(documentID: documentID,imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment, steps: steps)
-                        
-                        // Menambahkan recipe ke array 2 dimensi
-                        fetchedRecipes.append([recipe])
-                    }
-                }
-                self?.arrOfRecipe = fetchedRecipes
-                self?.TableViewRecipe.reloadData()
-            }
-        }
+    @IBOutlet weak var listRecipeTV: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        listRecipeTV.dataSource = self
+        listRecipeTV.delegate = self
+        fetchDataFromFirestore()
+
+        // Do any additional setup after loading the view.
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Menggunakan array dalam array, sehingga setiap section hanya memiliki satu item
         return arrOfRecipe[section].count
     }
     
@@ -57,7 +36,7 @@ class HomeViewController: UIViewController , UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! RecipeTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! RecipeListTableViewCell
         
         cell.delegate = self // Mengatur delegate pada setiap sel untuk menangani pengklikan tombol
         cell.indexPath = indexPath // setel indexPath pada cell
@@ -81,7 +60,7 @@ class HomeViewController: UIViewController , UITableViewDataSource, UITableViewD
                 }
 
                 DispatchQueue.main.async {
-                    cell.RecipePhotos.image = image
+                    cell.recipeImages.image = image
                 }
 
             }.resume()
@@ -89,20 +68,10 @@ class HomeViewController: UIViewController , UITableViewDataSource, UITableViewD
             print("URL gambar tidak valid")
         }
         
-        cell.RecipeTItleLabel.text = recipe.name
-        cell.ChefLabel.text = recipe.creator
+        cell.recipeTitle.text = recipe.name
+        cell.chefName.text = recipe.creator
         
         return cell
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        TableViewRecipe.dataSource = self
-        TableViewRecipe.delegate = self
-        fetchDataFromFirestore()
-        
-        // buat ilangin putih putih di atasnya
-//        TableViewRecipe.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: TableViewRecipe.frame.height, height: CGFloat.leastNormalMagnitude))
     }
     
     // Implementasi fungsi dari RecipeTableViewCellDelegate
@@ -118,4 +87,38 @@ class HomeViewController: UIViewController , UITableViewDataSource, UITableViewD
                 destinationVC.selectedRecipeIndex = selectedRecipeIndex
             }
         }
+    
+    func fetchDataFromFirestore() {
+        database.collection("recipes").getDocuments { [weak self] (snapshot, error) in
+            if let error = error {
+                print("Error getting documents: \(error)")
+            } else {
+                var fetchedRecipes: [[recipeModel]] = []
+                for document in snapshot!.documents {
+                    let data = document.data()
+//                    print("Data from Firestore: \(data)")
+                    if let imagePotrait = data["imagePotrait"] as? String,
+                       let name = data["name"] as? String,
+                        let creator = data["creator"] as? String,
+                       let ingredients = data["ingredients"] as? [String],
+                       let equipment = data["equipment"] as? [String],
+                        let steps = data["Steps"] as? [String],
+                    let creatorPhotos = data["creatorPhotos"] as? String{
+                        
+                        let documentID = document.documentID
+                        let recipe = recipeModel(documentID: documentID,imagePotrait: imagePotrait, name: name, creator: creator, ingredients: ingredients, equipment: equipment, steps: steps, creatorPhotos: creatorPhotos)
+                        
+                        // Menambahkan recipe ke array 2 dimensi
+                        fetchedRecipes.append([recipe])
+                    }
+                }
+                self?.arrOfRecipe = fetchedRecipes
+                self?.listRecipeTV.reloadData()
+            }
+        }
+    }
+    
+    
+
+   
 }
