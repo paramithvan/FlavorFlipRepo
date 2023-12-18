@@ -729,6 +729,8 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="565" id="eo4-kk-iUi"/>
                                                 </constraints>
+                                                <color key="separatorColor" red="0.96862745289999996" green="0.95686274770000002" blue="0.90980386729999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <color key="sectionIndexBackgroundColor" red="0.96862745289999996" green="0.95686274770000002" blue="0.90980386729999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <prototypes>
                                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="stepCell" rowHeight="169" id="7at-8X-Isk" customClass="StepsTableViewCell" customModule="FlavorFlip" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="50" width="350" height="169"/>
@@ -764,6 +766,7 @@
                                                                 <constraint firstItem="eh0-0O-mc9" firstAttribute="leading" secondItem="GDV-qj-4qg" secondAttribute="leading" constant="16" id="tRD-og-6bQ"/>
                                                             </constraints>
                                                         </tableViewCellContentView>
+                                                        <color key="backgroundColor" red="0.96862745289999996" green="0.95686274770000002" blue="0.90980386729999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                         <connections>
                                                             <outlet property="stepVideo" destination="qgT-O7-W1u" id="IIn-c6-smJ"/>
                                                             <outlet property="stepsLabel" destination="eh0-0O-mc9" id="ckA-fX-WZj"/>
@@ -801,7 +804,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <color key="backgroundColor" red="0.96862745289999996" green="0.95686274770000002" blue="0.90980386729999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="t9c-sQ-BKj" secondAttribute="trailing" constant="20" symbolic="YES" id="0Ub-qL-1SV"/>
                                             <constraint firstItem="DHf-kw-hzf" firstAttribute="leading" secondItem="wle-U9-7Yv" secondAttribute="leading" constant="20" symbolic="YES" id="3KO-cl-krb"/>
